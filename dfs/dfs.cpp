@@ -4,33 +4,30 @@
 #include <sstream>
 using namespace std;
 
-void bfs(int n, vector<int> adj[])
+void dfs(int node, vector<int> adj[], int vis[], vector<int> &ls)
 {
-    queue<int> children;  // queue to get the next immediate child
-    int visited[n] = {0}; // keep track of visited nodes
-    visited[0] = 1;
-    children.push(0);         // assuming that the root is 0 *********** change this when applicable
-    vector<int> bfsTraversal; // add the traversal
-
-    while (!children.empty())
+    vis[node] = 1;
+    ls.push_back(node);
+    for (auto it : adj[node])
     {
-        int node = children.front(); // traverse the first node in queue
-        children.pop();
-        bfsTraversal.push_back(node);
-
-        for (auto it : adj[node])
+        if (!vis[it])
         {
-            if (!visited[it])
-            {
-                visited[it] = 1;
-                children.push(it); // add adjacent node if not already there
-            }
+            dfs(it, adj, vis, ls);
         }
     }
+}
 
-    for (int i = 0; i < bfsTraversal.size(); i++)
+void dfsOnGraph(int n, vector<int> adj[])
+{
+    int vis[n] = {0};
+    int start = 0;
+    vector<int> ls;
+
+    dfs(start, adj, vis, ls);
+
+    for (int i = 0; i < ls.size(); i++)
     {
-        cout << bfsTraversal[i] << " ";
+        cout << ls[i] << " ";
     }
 }
 
@@ -62,7 +59,7 @@ int main()
     }
 
     // bfs on the graph
-    bfs(n, adj);
+    dfsOnGraph(n, adj);
 
     return 0;
 }
