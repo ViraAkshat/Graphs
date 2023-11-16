@@ -7,23 +7,23 @@ using namespace std;
 bool detectCycle(int src, vector<int> adj[], int vis[])
 {
     vis[src] = 1;
-    queue<pair<int, int>> children;
-    children.push({src, -1});
+    queue<pair<int, int>> nextNode;
+    nextNode.push({src, -1}); // node, parent
 
-    while (!children.empty())
+    while (!nextNode.empty())
     {
-        int node = children.front().first;
-        int parent = children.front().second;
-        children.pop();
+        int current_node = nextNode.front().first;
+        int parent = nextNode.front().second;
+        nextNode.pop();
 
-        for (auto adjNode : adj[node])
+        for (auto adjNode : adj[current_node])
         {
             if (!vis[adjNode])
             {
                 vis[adjNode] = 1;
-                children.push({adjNode, node});
+                nextNode.push({adjNode, current_node});
             }
-            else if (parent != adjNode)
+            else if (adjNode != parent)
             {
                 return true;
             }
@@ -35,35 +35,27 @@ bool detectCycle(int src, vector<int> adj[], int vis[])
 
 int main()
 {
-    int n, m; // nodes and edges
-    string line;
-    getline(cin, line);
-    stringstream words(line);
+    int n, m;
+    string nodes;
+    getline(cin, nodes);
+    stringstream num(nodes);
+    num >> n;
+    num >> m;
 
-    words >> n;
-    words >> m;
-
-    // insert graph; adjacency list; O(2*Edges)
+    // adj list
     vector<int> adj[n + 1];
-    int vis[n] = {0};
-
     for (int i = 0; i < m; i++)
     {
-        // cout << i << " ";
-
+        string edge;
+        getline(cin >> ws, edge);
+        stringstream node(edge);
         int u, v;
-        getline(cin >> ws, line);
-        stringstream pts(line);
-        pts >> u;
-        pts >> v;
-        // cout << "u: " << u << "v: " << v << endl;
-        adj[u].push_back(v); // add a tuple in case of weighted graphs, (v, wt)
-        adj[v].push_back(u); // skip in case of directed graph
-        // cout << "end of " << i << endl;
+        node >> u;
+        node >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
+    int vis[n] = {0};
 
-    // bfs on the graph
-    cout << detectCycle(1, adj, vis);
-
-    return 0;
+    cout << detectCycle(0, adj, vis);
 }
