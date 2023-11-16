@@ -56,6 +56,22 @@ int main()
         adj[v].push_back(u);
     }
     int vis[n] = {0};
+    bool isCycle = false;
 
-    cout << detectCycle(0, adj, vis);
+    // to account for multiple connected components
+    for (int i = 0; i < n; i++)
+    {
+        if (!vis[i])
+        {
+            if (detectCycle(i, adj, vis))
+            {
+                isCycle = true;
+                break;
+            }
+        }
+    }
+
+    cout << isCycle;
+
+    return 0;
 }
