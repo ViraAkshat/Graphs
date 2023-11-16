@@ -12,7 +12,10 @@ bool detectCycle(int src, vector<int> adj[], int vis[], int parent)
     {
         if (!vis[adjNode])
         {
-            detectCycle(adjNode, adj, vis, src);
+            if (detectCycle(adjNode, adj, vis, src))
+            {
+                return true;
+            }
         }
         else if (adjNode != parent)
         {
