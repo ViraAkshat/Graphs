@@ -1,31 +1,24 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
-#include <Queue>
 using namespace std;
 
-bool isBipartite(vector<int> adj[], int color[], int src)
+bool isBipartite(vector<int> adj[], int color[], int src, int src_color)
 {
-    queue<int> bipart;
-    bipart.push(src);
-    color[src] = 0;
+    color[src] = !src_color;
 
-    while (!bipart.empty())
+    for (auto adjNode : adj[src])
     {
-        int node = bipart.front();
-        bipart.pop();
-        for (auto adjNode : adj[node])
+        if (color[adjNode] == -1)
         {
-            if (color[adjNode] == -1)
+            if (!isBipartite(adj, color, adjNode, !src_color))
             {
-                color[adjNode] = 1 - color[node];
-                bipart.push(adjNode);
-            }
-            else if (color[adjNode] == color[node])
-            {
-                // cout << node << " " << adjNode << endl;
                 return false;
             }
+        }
+        else if (color[adjNode] == color[src])
+        {
+            return false;
         }
     }
 
@@ -67,7 +60,7 @@ int main()
     {
         if (color[i] == -1)
         {
-            if (!isBipartite(adj, color, i))
+            if (!isBipartite(adj, color, i, 1))
             {
                 isBp = false;
                 break;
