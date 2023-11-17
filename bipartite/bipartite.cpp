@@ -18,11 +18,12 @@ bool isBipartite(vector<int> adj[], int color[])
         {
             if (color[adjNode] == -1)
             {
-                color[adjNode] = !color[node];
+                color[adjNode] = 1 - color[node];
                 bipart.push(adjNode);
             }
             else if (color[adjNode] == color[node])
             {
+                // cout << node << " " << adjNode << endl;
                 return false;
             }
         }
@@ -53,7 +54,13 @@ int main()
         adj[u].push_back(v);
         adj[v].push_back(u);
     }
-    int color[n] = {-1};
+
+    int color[n];
+    // color[n] = {-1} does not work, it works only for 0
+    for (int i = 0; i < n; i++)
+    {
+        color[i] = -1;
+    }
 
     cout << isBipartite(adj, color);
 
